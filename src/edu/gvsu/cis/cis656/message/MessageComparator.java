@@ -8,8 +8,13 @@ import java.util.Comparator;
 public class MessageComparator implements Comparator<Message> {
 
     @Override
-    public int compare(Message lhs, Message rhs) {
-        // Write your code here
+    public int compare(Message firstmessage, Message secondmessage) {
+        if(firstmessage.ts.happenedBefore(secondmessage.ts)) {
+            return -1;
+        }
+        else if(secondmessage.ts.happenedBefore(firstmessage.ts)) {
+            return 1;
+        }
         return 0;
     }
 

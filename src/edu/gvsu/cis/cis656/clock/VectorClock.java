@@ -1,5 +1,7 @@
 package edu.gvsu.cis.cis656.clock;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
@@ -17,13 +19,11 @@ public class VectorClock implements Clock {
     @Override
     public void update(Clock other) {
         for(String time : ((VectorClock) other).clock.keySet()) {
-            if(this.getTime(Integer.parseInt(time)) != 0) {
-                if(other.getTime(Integer.parseInt(time)) > this.getTime(Integer.parseInt(time))) {
-                    clock.put(time, other.getTime(Integer.parseInt(time)));
+                if(clock.containsKey(time)) {
+                    clock.put(time, Math.max(clock.get(time), other.getTime(Integer.parseInt(time))));
+                } else {
+                    clock.put(time, other.getTime((Integer.parseInt(time))));
                 }
-            } else {
-                clock.put(time, other.getTime(Integer.parseInt(time)));
-            }
     }
 }
 
@@ -36,8 +36,7 @@ public class VectorClock implements Clock {
 
     @Override
     public void tick(Integer pid) {
-        System.out.println(String.valueOf(pid));
-        clock.put(String.valueOf(pid), clock.get(Integer.toString(pid)) + 1);
+        clock.put(pid.toString(), clock.get(Integer.toString(pid)) + 1);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class VectorClock implements Clock {
 
     @Override
     public void setClockFromString(String s) {
-        if (s.matches("\\{\"\\d+\":\\d+,\"\\d+\":\\d+,\"\\d+\":\\d+}")) {
+       if (s.matches("\\{(\"\\d+\":\\d+,?)+}")) {
             clock.clear();
             Pattern pattern = Pattern.compile("\"\\d\"");
             Matcher matcher = pattern.matcher(s);

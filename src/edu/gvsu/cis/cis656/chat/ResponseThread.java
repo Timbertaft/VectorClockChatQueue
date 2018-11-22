@@ -38,36 +38,36 @@ public class ResponseThread implements Runnable {
             if (complete)
                 socket.close();
 
-            String incomingmessage = new String(packet.getData(), 0, packet.getLength());
-            Message message = Message.parseMessage(incomingmessage);
+            if (!Thread.currentThread().isInterrupted()) {
+                String incomingmessage = new String(packet.getData(), 0, packet.getLength());
+                Message message = Message.parseMessage(incomingmessage);
 
-            if (message.type == MessageTypes.ERROR) {
-                System.out.println(message.message);
-            } else {
-                queue.add(message);
-                Message queuetop = queue.peek();
-                while (queuetop != null) {
+                if (message.type == MessageTypes.ERROR) {
+                    System.out.println(message.message);
+                } else {
+                    queue.add(message);
+                    Message queuetop = queue.peek();
+                    while (queuetop != null) {
 
-                    if (CallingClock.getTime(message.pid) + 1 == message.ts.getTime(message.pid) &&
-                            CallingClock.happenedBefore(message.ts)) {
+                        if (CallingClock.getTime(message.pid) + 1 == message.ts.getTime(message.pid) &&
+                                CallingClock.happenedBefore(message.ts)) {
 
-                        System.out.println("\n" +queuetop.sender + queuetop.message);
-                        System.out.print("Type a message or type exit to terminate the application:  ");
+                            System.out.println("\n" + queuetop.sender + queuetop.message);
+                            System.out.print("Type a message or type exit to terminate the application:  ");
 
-                        CallingClock.update(queuetop.ts);
+                            CallingClock.update(queuetop.ts);
 
-                        queue.remove(queuetop);
-                        queuetop = queue.peek();
-                    } else {
-                        queuetop = null;
+                            queue.remove(queuetop);
+                            queuetop = queue.peek();
+                        } else {
+                            queuetop = null;
+                        }
                     }
                 }
             }
         }
 
         socket.close();
-
-        System.out.println("Terminating...");
     }
 
     void stop() {

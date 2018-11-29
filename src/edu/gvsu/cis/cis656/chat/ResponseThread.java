@@ -4,7 +4,6 @@ import edu.gvsu.cis.cis656.clock.VectorClock;
 import edu.gvsu.cis.cis656.message.Message;
 import edu.gvsu.cis.cis656.message.MessageTypes;
 import edu.gvsu.cis.cis656.queue.PriorityQueue;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

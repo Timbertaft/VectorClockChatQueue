@@ -17,7 +17,7 @@ class ChatClient {
     private static Scanner scanner = new Scanner(System.in);
     private static VectorClock clock = new VectorClock();
 
-    public static void main(String[] args) throws InterruptedException, UnknownHostException {
+    public static void main(String[] args) throws InterruptedException {
 
         PriorityQueue<Message> messageStack = new PriorityQueue<>(new MessageComparator());
         String username = UserEntry();
